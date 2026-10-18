@@ -1,0 +1,41 @@
+[gd_scene load_steps=1 format=3]
+
+[sub_resource id=1 type="RectangleShape2D"]
+size = Vector2(640, 40)
+
+[sub_resource id=2 type="RectangleShape2D"]
+size = Vector2(160, 20)
+
+[sub_resource id=3 type="RectangleShape2D"]
+size = Vector2(20, 160)
+
+[node name="TestRoom" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+position = Vector2(320, 180)
+
+[node name="Background" type="ColorRect" parent="."]
+size = Vector2(640, 360)
+color = Color(0.2, 0.3, 0.5)
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(320, 340)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource(1)
+
+[node name="Platform" type="StaticBody2D" parent="."]
+position = Vector2(200, 250)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+shape = SubResource(2)
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(0, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource(3)
+
+[node name="PlayerStart" type="Marker2D" parent="."]
+position = Vector2(100, 300)
