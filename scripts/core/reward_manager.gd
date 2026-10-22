@@ -1,4 +1,3 @@
-class_name RewardManager
 extends Node
 
 # RewardManager tracks player inventory and granted items.

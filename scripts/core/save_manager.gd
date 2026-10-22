@@ -1,4 +1,3 @@
-class_name SaveManager
 extends Node
 
 # SaveManager reads/writes GameState to user://saves/ as JSON.
@@ -9,7 +8,7 @@ const EXTENSION := ".json"
 var current_slot: int = 1
 
 func _ready() -> void:
-	DirAccess.make_dir(SAVE_DIR)
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
 func _get_path(slot: int) -> String:
 	return SAVE_DIR + "slot_" + str(slot) + EXTENSION
@@ -33,11 +32,15 @@ func load_game(slot: int) -> bool:
 		return false
 	var json: String = file.get_as_text()
 	file.close()
-	var result: Variant = JSON.parse(json)
-	if result.error != OK:
+	var parser := JSON.new()
+	var error := parser.parse(json)
+	if error != OK:
 		push_error("SaveManager: invalid JSON in " + path)
 		return false
-	GameState.from_dict(result.result)
+	if not parser.data is Dictionary:
+		push_error("SaveManager: save data is not a dictionary in " + path)
+		return false
+	GameState.from_dict(parser.data)
 	current_slot = slot
 	return true
 
@@ -47,4 +50,4 @@ func save_exists(slot: int) -> bool:
 func clear_save(slot: int) -> void:
 	var path: String = _get_path(slot)
 	if FileAccess.file_exists(path):
-		DirAccess.remove(path)
+		DirAccess.remove_absolute(path)

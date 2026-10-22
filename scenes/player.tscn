@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://d7sicb1i4232"]
+
+[ext_resource type="Script" uid="uid://booalnxr2mew6" path="res://scripts/player/player_controller.gd" id="1_controller"]
+[ext_resource type="SpriteFrames" uid="uid://uuf1sttyqdqy" path="res://resources/player/player_sprite_frames.tres" id="2_frames"]
+[ext_resource type="Script" uid="uid://d3jvoem41i4ul" path="res://scripts/player/player_camera.gd" id="3_camera"]
+[ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="4_health"]
+[ext_resource type="Script" path="res://scripts/combat/hitbox.gd" id="5_hitbox"]
+[ext_resource type="Script" path="res://scripts/combat/hurtbox.gd" id="6_hurtbox"]
+[ext_resource type="Script" path="res://scripts/core/camera_effects.gd" id="7_camera_effects"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 9.0
+height = 42.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(30, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(48, 28)
+
+[node name="Player" type="CharacterBody2D" unique_id=1904760365]
+floor_snap_length = 4.0
+script = ExtResource("1_controller")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1157001422]
+texture_filter = 1
+position = Vector2(0, -37.5)
+scale = Vector2(0.375, 0.375)
+sprite_frames = ExtResource("2_frames")
+animation = &"crouch"
+autoplay = "idle"
+frame = 1
+frame_progress = 0.6029622
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1557506770]
+position = Vector2(0, -21)
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="AttackOrigin" type="Node2D" parent="." unique_id=1999199430]
+position = Vector2(20, -26)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1505257067]
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1001]
+script = ExtResource("4_health")
+max_health = 4
+invulnerability_time = 0.65
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=1002]
+script = ExtResource("5_hitbox")
+position = Vector2(38, -26)
+monitoring = false
+monitorable = false
+collision_layer = 0
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1003]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1310449063]
+script = ExtResource("6_hurtbox")
+position = Vector2(0, -22)
+health_component_path = NodePath("../HealthComponent")
+knockback_multiplier = 1.0
+monitoring = true
+monitorable = false
+collision_layer = 64
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1785883361]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1263051043]
+position = Vector2(0, -48)
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+script = ExtResource("3_camera")

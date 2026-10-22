@@ -1,4 +1,3 @@
-class_name GameState
 extends Node
 
 # GameState holds runtime data that survives scene changes.

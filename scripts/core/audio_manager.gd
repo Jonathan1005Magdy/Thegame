@@ -1,4 +1,3 @@
-class_name AudioManager
 extends Node
 
 # AudioManager plays one music stream and one SFX stream at a time.

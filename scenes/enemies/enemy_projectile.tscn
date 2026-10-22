@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://enemy_proj_scene"]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_projectile.gd" id="1_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
+size = Vector2(16, 16)
+
+[node name="EnemyProjectile" type="Area2D"]
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_area")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 0)
+scale = Vector2(1, 1)

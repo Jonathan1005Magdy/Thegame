@@ -1,4 +1,3 @@
-class_name SceneManager
 extends Node
 
 # SceneManager loads and unloads scenes by file path.

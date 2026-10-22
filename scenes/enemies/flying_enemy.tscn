@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://flying_enemy_scene"]
+
+[ext_resource type="Script" path="res://scripts/enemies/flying_enemy.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="2_health"]
+[ext_resource type="Script" path="res://scripts/combat/hitbox.gd" id="3_hitbox"]
+[ext_resource type="Script" path="res://scripts/combat/hurtbox.gd" id="4_hurtbox"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_projectile.tscn" id="5_proj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 10.0
+height = 32.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(28, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(32, 20)
+
+[node name="FlyingEnemy" type="CharacterBody2D"]
+gravity_scale = 0.0
+floor_snap_length = 0.0
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -20)
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="Hitbox" type="Area2D" parent="."]
+script = ExtResource("3_hitbox")
+position = Vector2(25, -16)
+monitoring = false
+monitorable = false
+collision_layer = 0
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+script = ExtResource("4_hurtbox")
+position = Vector2(0, -16)
+health_component_path = NodePath("../HealthComponent")
+knockback_multiplier = 0.5
+monitoring = true
+monitorable = false
+collision_layer = 64
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, 0)
+target_position = Vector2(0, 1000)
+enabled = true
+collision_mask = 1
