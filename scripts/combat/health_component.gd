@@ -61,6 +61,10 @@ func set_health(new_health: int) -> void:
 	health_changed.emit(current_health, max_health)
 	if current_health <= 0:
 		died.emit()
+	# Reset invulnerability when health is explicitly set (e.g., respawning)
+	if current_health > 0:
+		_invulnerability_timer = 0.0
+		_last_hit_id = -1
 
 
 func is_invulnerable() -> bool:
@@ -73,3 +77,8 @@ func get_invulnerability_timer() -> float:
 
 func get_health_ratio() -> float:
 	return float(current_health) / float(max_health)
+
+
+func clear_invulnerability() -> void:
+	_invulnerability_timer = 0.0
+	_last_hit_id = -1

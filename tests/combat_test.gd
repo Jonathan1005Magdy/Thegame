@@ -4,12 +4,12 @@ extends Node
 # It checks player attack hitbox, enemy damage, knockback, hit flash, camera shake/hit-stop,
 # enemy patrol/chase/attack, and reward drops.
 
-var player: PlayerController
+var player: CharacterBody2D
 var camera: Camera2D
 var room: Node
 var failures: int = 0
-var test_patroller: BaseEnemy
-var test_flyer: BaseEnemy
+var test_patroller: CharacterBody2D
+var test_flyer: CharacterBody2D
 
 
 func _ready() -> void:
@@ -80,7 +80,7 @@ func _test_enemy_take_damage() -> void:
 	await _wait_physics(10)
 
 	_check(test_patroller.health.current_health < initial_health, "enemy takes damage from player attack")
-	_check(test_patroller.current_state == BaseEnemy.State.HURT, "enemy enters hurt state on hit")
+	_check(test_patroller.get_state_name() == &"hurt", "enemy enters hurt state on hit")
 
 
 func _test_enemy_knockback() -> void:
@@ -156,7 +156,7 @@ func _test_enemy_patrol_and_chase() -> void:
 	patroller.velocity = Vector2.ZERO
 	await _wait_physics(10)
 
-	_check(patroller.current_state == BaseEnemy.State.PATROL, "patroller starts in patrol")
+	_check(patroller.get_state_name() == &"patrol", "patroller starts in patrol")
 	var initial_x = patroller.global_position.x
 	await _wait_physics(60)  # Wait for patrol movement
 	_check(absf(patroller.global_position.x - initial_x) > 20.0, "patroller moves during patrol")
@@ -164,7 +164,7 @@ func _test_enemy_patrol_and_chase() -> void:
 	# Test chase - move player into detection range
 	player.global_position = Vector2(1150, 500)
 	await _wait_physics(20)
-	_check(patroller.current_state == BaseEnemy.State.CHASE, "patroller chases player in range")
+	_check(patroller.get_state_name() == &"chase", "patroller chases player in range")
 
 
 func _test_flying_enemy_projectile() -> void:
@@ -174,13 +174,13 @@ func _test_flying_enemy_projectile() -> void:
 	flyer.velocity = Vector2.ZERO
 	await _wait_physics(10)
 
-	_check(flyer.current_state == BaseEnemy.State.PATROL, "flyer starts in patrol")
+	_check(flyer.get_state_name() == &"patrol", "flyer starts in patrol")
 
 	# Move player into range
 	player.global_position = Vector2(1400, 350)
 	await _wait_physics(30)
 
-	_check(flyer.current_state == BaseEnemy.State.CHASE or flyer.current_state == BaseEnemy.State.ATTACK, "flyer detects player")
+	_check(flyer.get_state_name() == &"chase" or flyer.get_state_name() == &"attack", "flyer detects player")
 
 
 func _test_enemy_death_reward() -> void:
@@ -194,7 +194,7 @@ func _test_enemy_death_reward() -> void:
 	patroller.health.set_health(0)
 	await _wait_physics(20)
 
-	_check(patroller.current_state == BaseEnemy.State.DEATH, "patroller dies when health reaches 0")
+	_check(patroller.get_state_name() == &"death", "patroller dies when health reaches 0")
 	_check(RewardManager.get_item_count("coin") > initial_coins, "reward dropped on enemy death")
 
 

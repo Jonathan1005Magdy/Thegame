@@ -31,7 +31,7 @@ func receive_hit(hit: HitData) -> bool:
 	# Returns true if hit was processed, false if blocked/ignored.
 	if _health_component == null:
 		return false
-	if not _health_component.is_instance_valid():
+	if not is_instance_valid(_health_component):
 		return false
 
 	# Prevent duplicate hits from same attack
